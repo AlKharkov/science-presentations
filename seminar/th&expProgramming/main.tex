@@ -32,48 +32,84 @@
 % ==================== НАСТРОЙКА КОЛОНТИТУЛОВ ====================
 % Добавляем номер слайда в нижний колонтитул
 \setbeamertemplate{footline}{
-  \leavevmode%
-  \hbox{%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
-    \usebeamerfont{author in head/foot}\insertshortauthor\hspace{5pt}--\hspace{5pt}\insertshorttitle\hfill\insertframenumber{} / \inserttotalframenumber
-  \end{beamercolorbox}}%
-  \vskip0pt%
+	\leavevmode%
+	\hbox{%
+		\begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+			\usebeamerfont{author in head/foot}\insertshorttitle\hfill\insertframenumber{} / \inserttotalframenumber
+	\end{beamercolorbox}}%
+	\vskip0pt%
 }
+
+
 
 % ==================== ИНФОРМАЦИЯ О ДОКУМЕНТЕ ====================
 \title[Комплексный подход к дедуктивной верификации реализаций умножения матриц]{Комплексный подход к дедуктивной верификации реализаций умножения матриц}
-\subtitle{От простого к сложному -- Итерация 2}
-\author[Formal Methods Group]{Formal Methods Group}
-\institute[НГУ]{Новосибирский государственный университет}
-\date{28 августа 2026 г.}
+\subtitle{\scriptsize{По итогам участия в Летнем Системном Буткемпе от лаборатории YADRO, НГУ}}
+\institute{\small{Семинар теоретического и экспериментального программирования им. В.А. Непомнящего}}
+\date{\small{22 сентября 2026 г.}}
+
 
 % ==================== НАЧАЛО ДОКУМЕНТА ====================
 \begin{document}
 
-% -------------------- ТИТУЛЬНЫЙ СЛАЙД
+
+% ==================== ТИТУЛЬНЫЙ СЛАЙД ====================
 \begin{frame}[plain]
 	\titlepage
 \end{frame}
 
-% ==================== ОСНОВНАЯ ЧАСТЬ ====================
 
-\begin{frame}{Предыстория}
+% ==================== ОСНОВНАЯ ЧАСТЬ ====================
+\begin{frame}{На пути к minigemm}
     Верифицировано ранее:
     \begin{itemize}
         \item Версия 0. Наивная реализация.
         \item Версия 1. С переставленными внутренними циклами.
     \end{itemize}
     \vspace{0.5cm}
-    Работа в рамках данного проекта:
+    Работа в рамках Летнего Буткемпа лаборатории YADRO:
     \begin{itemize}
         \item Версия 2. С ассемблерными вставками.
     \end{itemize}
+    \vspace{0.5cm}
+    В течение этого семестра (до конца 2026 года):
+    \begin{itemize}
+    	\item Версия 3. С микроядром.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Визуализация умножения матриц}
+	\begin{center}
+		\includegraphics[scale=0.8]{img/matrix_mult.png}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Версия 0. Наивная реализация}
+	\begin{center}
+		\includegraphics[scale=0.6]{img/gemm_v0.png}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Версия 1. С переставленными внутренними циклами}
+	\begin{center}
+		\includegraphics[scale=0.5]{img/gemm_v1.png}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Версия 2. С ассемблерными вставками}
+	\begin{center}
+		\includegraphics[scale=0.38]{img/gemm_v2.png}
+	\end{center}
 \end{frame}
 
 
 \begin{frame}{Цели проекта}
 	\begin{itemize}
-		\item Цель 1. Выполнить реинжиниринг процесса дедуктивной верификации наивной реализации gemm\_v0, gemm\_v1
+		\item Цель 1. Выполнить реинжиниринг процесса дедуктивной верификации реализаций gemm\_v0, gemm\_v1
 		\begin{block}{Мотивация}
 			\begin{itemize}
 				\item Повысить уровень автоматизации процесса верификации
@@ -81,7 +117,7 @@
 			\end{itemize}
 		\end{block}
 		
-		\item Цель 2. Провести дедуктивную верификацию программы умножения матриц, содержащей ассемблерные вставки
+		\item Цель 2. Провести дедуктивную верификацию реализации gemm\_v2
 		\begin{block}{Мотивация}
 			\begin{itemize}
 				\item Сделать ещё один шаг к верификации реализации алгоритма minigemm
@@ -89,52 +125,24 @@
 		\end{block}
 	\end{itemize}
 \end{frame}
-    
-
-\begin{frame}{Задачи для цели 1}
-\begin{enumerate}
-	\item Выполнить верификацию для каждого из следующих изменений и запротоколировать результат:
-	\begin{enumerate}
-		\item Удалить операцию означивания матрицы C нулями в наивном коде
-		\item Удалить лишние separated в спецификациях
-		\item По одному удалять read и write в спецификациях
-		\item Ослабить посылки в базе индукции индуктивных предикатов на n < 0 в теории предметной области
-		\item По одному удалять assert в спецификациях
-	\end{enumerate}
-	\item Подготовить отчетные материалы
-	\end{enumerate}
-\end{frame}
-
-
-\begin{frame}{Задачи для цели 2}
-	\begin{enumerate}
-		\item Погрузиться в предметную область
-		\item Задать спецификации операций, входящих в ассемблерные вставки
-		\item Расширить формальную теорию предметной области на функции и предикаты из этих спецификаций (20-21 августа)
-		\item Породить условия корректности (21 августа)
-		\item Доказать условия корректности (22-26 августа)
-		\item Подготовить отчетные материалы (26-27 августа)
-	\end{enumerate}
-\end{frame}
 
 
 \begin{frame}{Результаты для цели 1}
-\begin{enumerate}
-	\item Выполнена верификация для каждого из следующих изменений и запротоколирован результат:
 	\begin{enumerate}
-		\item \ding{51} Удалить операцию означивания матрицы C нулями в наивном коде
-		\item \ding{51} Удалить лишние separated в спецификациях
-		\item \ding{55} По одному удалять valid\_read и valid в спецификациях
-		\item \ding{55} Ослабить посылки в базе индукции индуктивных предикатов на n < 0 в теории предметной области
-		\item \ding{55} По одному удалять assert в спецификациях
-	\end{enumerate}
-	\item Подготовлены отчетные материалы
+		\item С учетом замечаний, сделанных в ходе изучения проделанной ранее работы, были проверены следующие гипотезы:
+		\begin{enumerate}
+			\item \ding{51} Удалить операцию означивания матрицы C нулями в наивном коде
+			\item \ding{51} Удалить лишние separated в спецификациях
+			\item \ding{55} По одному удалять valid\_read и valid в спецификациях
+			\item \ding{55} Ослабить посылки в базе индукции индуктивных предикатов на n < 0 в теории предметной области
+			\item \ding{55} По одному удалять assert в спецификациях
+		\end{enumerate}
+		\item Подготовлены отчетные материалы
 	\end{enumerate}
 \end{frame}
 
 
 \begin{frame}{Результаты для цели 2}
-	 	
 	\begin{enumerate}
 		\item Изучена предметная область
 		\item Определены спецификации операций, входящих в ассемблерные вставки
@@ -162,52 +170,28 @@
 
 \begin{frame}{Определены спецификации операций, входящих в ассемблерные вставки}
     \begin{center}
-        \includegraphics[scale=0.9]{img/old/typedef.png}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Определены спецификации операций, входящих в ассемблерные вставки}
-    \begin{center}
-        \includegraphics[scale=0.4]{img/new/typedef.png}
+        \includegraphics[scale=0.4]{img/typedef.png}
     \end{center}
 \end{frame}
 
 
 \begin{frame}{Расширена формальная теория предметной области на функции и предикаты из этих спецификаций}
     \begin{center}
-        \includegraphics[scale=0.9]{img/old/dp_frame.png}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Расширена формальная теория предметной области на функции и предикаты из этих спецификаций}
-    \begin{center}
-        \includegraphics[scale=0.4]{img/new/dp_frame.png}
+        \includegraphics[scale=0.4]{img/dp_frame.png}
     \end{center}
 \end{frame}
 
 
 \begin{frame}{Порождены условия корректности}
 	\begin{center}
-		\includegraphics[scale=0.75]{img/old/goals.png}
-	\end{center}
-\end{frame}
-
-\begin{frame}{Порождены условия корректности}
-	\begin{center}
-		\includegraphics[scale=0.85]{img/new/goals.png}
+		\includegraphics[scale=0.85]{img/goals.png}
 	\end{center}
 \end{frame}
 
 
 \begin{frame}{Доказаны условия корректности}
 	\begin{center}
-    	\includegraphics[scale=0.5]{img/old/output.png}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Доказаны условия корректности}
-	\begin{center}
-    	\includegraphics[scale=0.6]{img/new/output.png}
+    	\includegraphics[scale=0.6]{img/output.png}
     \end{center}
 \end{frame}
 
@@ -251,6 +235,12 @@
 	\end{figure}
 \end{frame}
 
+
+\begin{frame}{Идея версии 3. С микроядром}
+	\begin{center}
+		\includegraphics[scale=0.7]{img/micro_core.png}
+	\end{center}
+\end{frame}
 
 
 \end{document}
