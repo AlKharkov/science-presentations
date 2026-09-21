@@ -53,6 +53,40 @@
 \newcommand{\N}[1]{\textcolor{nm}{#1}}   % number
 \newcommand{\V}[1]{\textcolor{vr}{#1}}   % variable
 
+% ==================== АННОТАЦИИ ====================
+\definecolor{acslkw}{RGB}{128,0,128}   % ключевые слова ACSL (axiomatic, predicate, inductive, case)
+\definecolor{acslty}{RGB}{0,0,255}     % типы (float, integer, real, float*)
+\definecolor{acslqu}{RGB}{200,0,0}     % кванторы (∀, ∃) — красный
+\definecolor{acslid}{RGB}{0,0,0}       % идентификаторы (A, B, C, i, j, k, N, ...)
+\definecolor{acslnm}{RGB}{255,140,0}   % числа (0, 1, 0.0)
+\definecolor{acsllg}{RGB}{0,128,0}     % логические связки (⟹, ∧, ∨, ≤, ≥)
+\definecolor{acslcm}{RGB}{150,150,150} % комментарии
+\definecolor{codebg}{RGB}{245,245,245} % фон (уже есть)
+\definecolor{acsllb}{RGB}{70,90,120}   % метки
+
+\newcommand{\AK}[1]{\textcolor{acslkw}{#1}}   % ACSL keyword
+\newcommand{\AT}[1]{\textcolor{acslty}{#1}}   % type
+\newcommand{\AQ}[1]{\textcolor{acslqu}{#1}}   % quantifier
+\newcommand{\AI}[1]{\textcolor{acslid}{#1}}   % identifier
+\newcommand{\AN}[1]{\textcolor{acslnm}{#1}}   % number
+\newcommand{\AL}[1]{\textcolor{acsllg}{#1}}   % logic
+\newcommand{\AC}[1]{\textcolor{acslcm}{#1}}   % comment
+\newcommand{\ALB}[1]{\textcolor{acsllb}{#1}}  % label
+
+% ==================== UNICODE символы ====================
+\usepackage{newunicodechar}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{⟹}{\ensuremath{\Rightarrow}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≥}{\ensuremath{\geq}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+
 
 % ==================== ИНФОРМАЦИЯ О ДОКУМЕНТЕ ====================
 \title[Комплексный подход к дедуктивной верификации реализаций умножения матриц]{Комплексный подход к дедуктивной верификации реализаций умножения матриц}
@@ -110,8 +144,6 @@
 	\setlength{\baselineskip}{1.1em}
 	\setlength{\parindent}{0pt}
 	
-	\definecolor{codebg}{RGB}{245,245,245} % светло-серый фон
-	
 	\begingroup
 	\setlength{\fboxsep}{7pt}%
 	\colorbox{codebg}{%
@@ -147,8 +179,6 @@
 	\ttfamily\small
 	\setlength{\baselineskip}{1.1em}
 	\setlength{\parindent}{0pt}
-	
-	\definecolor{codebg}{RGB}{245,245,245}
 	
 	\begingroup
 	\setlength{\fboxsep}{7pt}%
@@ -190,8 +220,6 @@
 	\setlength{\baselineskip}{1.1em}
 	\setlength{\parindent}{0pt}
 	
-	\definecolor{codebg}{RGB}{245,245,245}
-	
 	\begingroup
 	\setlength{\fboxsep}{7pt}%
 	\colorbox{codebg}{%
@@ -219,6 +247,144 @@
 		\end{minipage}%
 	}%
 	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Аксиоматика: предикат zeroed}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.2em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AK{axiomatic} \AI{MatrixMult} \{ \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{predicate} \AI{zeroed}(\AT{float*} \AI{a}, \AT{integer} \AI{b}, \AT{integer} \AI{e}) \AL{=} \\
+				\textcolor{ln}{3} & \hspace{4em}\AQ{∀} \AT{integer} \AI{k}; \AI{b} \AL{≤} \AI{k} \AL{<} \AI{e} \AL{⟹} \AI{a}[\AI{k}] \AL{==} \AN{0.0}; \\
+				\textcolor{ln}{4} & \\
+				\textcolor{ln}{5} & \hspace{2em} \AC{\textbackslash\textbackslash\hspace{0.5em}Остальная аксоматика на следующих слайдах} \\
+				\textcolor{ln}{6} & \\
+				\textcolor{ln}{7} & \} \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Аксиоматика: индуктивный предикат DotProduction}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AK{inductive} \AI{DotProduction}(\AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{2} & \hspace{2em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}, \AT{real} \AI{res}) \{ \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{case} \AI{dotproduction\_empty\_range}: \\
+				\textcolor{ln}{4} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \AT{integer} \AI{i}, \\
+				\textcolor{ln}{4} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}; \\
+				\textcolor{ln}{5} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AN{0.0}); \\
+				\textcolor{ln}{6} & \\
+				\textcolor{ln}{7} & \hspace{2em}\AK{case} \AI{dotproduction\_positive\_range}: \\
+				\textcolor{ln}{8} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \AT{integer} \AI{i}, \\
+				\textcolor{ln}{8} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}, \AT{real} \AI{res}; \\
+				\textcolor{ln}{9} & \hspace{4em}(\AN{0} \AL{<} \AI{to}) \AL{∧} \\
+				\textcolor{ln}{10} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}\AN{-1}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AI{res}) \AL{⟹} \\
+				\textcolor{ln}{11} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \\
+				\textcolor{ln}{11} & \hspace{6em}\AI{res} \AL{+} \AI{A}[\AI{i}\AI{*}\AI{K} \AL{+} (\AI{to}\AN{-1})] \AL{*} \AI{B}[(\AI{to}\AN{-1})\AI{*}\AI{N} \AL{+} \AI{j}]); \\
+				\textcolor{ln}{12} & \} \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Аксиоматика: индуктивный предикат RowResult}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AK{inductive} \AI{RowResult}\{\ALB{L2}\}(\AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{2} & \hspace{2em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}) \{ \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{case} \AI{rowresult\_empty}\{\ALB{L2}\}: \\
+				\textcolor{ln}{4} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{4} & \hspace{4em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}; \\
+				\textcolor{ln}{5} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{i}, \AI{K}, \AI{N}); \\
+				\textcolor{ln}{6} & \\
+				\textcolor{ln}{7} & \hspace{2em}\AK{case} \AI{rowresult\_step}\{\ALB{L2}\}: \\
+				\textcolor{ln}{8} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{8} & \hspace{4em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}; \\
+				\textcolor{ln}{9} & \hspace{4em}\AN{0} \AL{<} \AI{to} \AL{∧} \\
+				\textcolor{ln}{10} & \hspace{4em}\AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}\AN{-1}, \AI{i}, \AI{K}, \AI{N}) \AL{∧} \\
+				\textcolor{ln}{11} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{K}, \AI{i}, \AI{K}, (\AI{to}\AN{-1}), \AI{N}, \AI{\textbackslash at}(\AI{C}[\AI{i}\AI{*}\AI{N} \AL{+} (\AI{to}\AN{-1})], \ALB{L2})) \\
+				\textcolor{ln}{12} & \hspace{4em}\AL{⟹} \AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{i}, \AI{K}, \AI{N}); \\
+				\textcolor{ln}{13} & \} \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+	
+\end{frame}
+
+
+\begin{frame}[fragile]{Аксиоматика: индуктивный предикат MatrixResult}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AK{inductive} \AI{MatrixResult}\{\ALB{L2}\}(\AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{2} & \hspace{2em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}) \{ \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{case} \AI{matrixresult\_empty}\{\ALB{L2}\}: \\
+				\textcolor{ln}{4} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{4} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}; \\
+				\textcolor{ln}{5} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{K}, \AI{N}, \AI{M}); \\
+				\textcolor{ln}{6} & \\
+				\textcolor{ln}{7} & \hspace{2em}\AK{case} \AI{matrixresult\_step}\{\ALB{L2}\}: \\
+				\textcolor{ln}{8} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{8} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}; \\
+				\textcolor{ln}{9} & \hspace{4em}\AN{0} \AL{<} \AI{to} \AL{∧} \\
+				\textcolor{ln}{10} & \hspace{4em}\AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}\AN{-1}, \AI{K}, \AI{N}, \AI{M}) \AL{∧} \\
+				\textcolor{ln}{11} & \hspace{4em}\AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{N}, \AI{to}\AN{-1}, \AI{K}, \AI{N}) \\
+				\textcolor{ln}{12} & \hspace{4em}\AL{⟹} \AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{K}, \AI{N}, \AI{M}); \\
+				\textcolor{ln}{13} & \} \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+	
 \end{frame}
 
 
