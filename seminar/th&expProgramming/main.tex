@@ -72,6 +72,8 @@
 \newcommand{\AL}[1]{\textcolor{acsllg}{#1}}   % logic
 \newcommand{\AC}[1]{\textcolor{acslcm}{#1}}   % comment
 \newcommand{\ALB}[1]{\textcolor{acsllb}{#1}}  % label
+\newcommand{\AS}[1]{\textcolor{acslkw}{#1}}    % assigns / requires / ensures / behavior
+\newcommand{\AB}[1]{\textcolor{acslkw}{#1}}    % \nothing, \result, \valid, \valid_read, \separated, \at
 
 % ==================== UNICODE символы ====================
 \usepackage{newunicodechar}
@@ -294,17 +296,17 @@
 				\textcolor{ln}{2} & \hspace{2em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}, \AT{real} \AI{res}) \{ \\
 				\textcolor{ln}{3} & \hspace{2em}\AK{case} \AI{dotproduction\_empty\_range}: \\
 				\textcolor{ln}{4} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \AT{integer} \AI{i}, \\
-				\textcolor{ln}{4} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}; \\
-				\textcolor{ln}{5} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AN{0.0}); \\
-				\textcolor{ln}{6} & \\
-				\textcolor{ln}{7} & \hspace{2em}\AK{case} \AI{dotproduction\_positive\_range}: \\
-				\textcolor{ln}{8} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \AT{integer} \AI{i}, \\
-				\textcolor{ln}{8} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}, \AT{real} \AI{res}; \\
-				\textcolor{ln}{9} & \hspace{4em}(\AN{0} \AL{<} \AI{to}) \AL{∧} \\
-				\textcolor{ln}{10} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}\AN{-1}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AI{res}) \AL{⟹} \\
-				\textcolor{ln}{11} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \\
-				\textcolor{ln}{11} & \hspace{6em}\AI{res} \AL{+} \AI{A}[\AI{i}\AI{*}\AI{K} \AL{+} (\AI{to}\AN{-1})] \AL{*} \AI{B}[(\AI{to}\AN{-1})\AI{*}\AI{N} \AL{+} \AI{j}]); \\
-				\textcolor{ln}{12} & \} \\
+				\textcolor{ln}{5} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}; \\
+				\textcolor{ln}{6} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AN{0.0}); \\
+				\textcolor{ln}{7} & \\
+				\textcolor{ln}{8} & \hspace{2em}\AK{case} \AI{dotproduction\_positive\_range}: \\
+				\textcolor{ln}{9} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \AT{integer} \AI{i}, \\
+				\textcolor{ln}{10} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{j}, \AT{integer} \AI{N}, \AT{real} \AI{res}; \\
+				\textcolor{ln}{11} & \hspace{4em}(\AN{0} \AL{<} \AI{to}) \AL{∧} \\
+				\textcolor{ln}{12} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}\AN{-1}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AI{res}) \AL{⟹} \\
+				\textcolor{ln}{13} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \\
+				\textcolor{ln}{14} & \hspace{6em}\AI{res} \AL{+} \AI{A}[\AI{i}\AI{*}\AI{K} \AL{+} (\AI{to}\AN{-1})] \AL{*} \AI{B}[(\AI{to}\AN{-1})\AI{*}\AI{N} \AL{+} \AI{j}]); \\
+				\textcolor{ln}{15} & \} \\
 			\end{tabular}
 			\hspace{8pt}%
 			\vspace{4pt}%
@@ -330,24 +332,23 @@
 				\textcolor{ln}{2} & \hspace{2em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}) \{ \\
 				\textcolor{ln}{3} & \hspace{2em}\AK{case} \AI{rowresult\_empty}\{\ALB{L2}\}: \\
 				\textcolor{ln}{4} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
-				\textcolor{ln}{4} & \hspace{4em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}; \\
-				\textcolor{ln}{5} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{i}, \AI{K}, \AI{N}); \\
-				\textcolor{ln}{6} & \\
-				\textcolor{ln}{7} & \hspace{2em}\AK{case} \AI{rowresult\_step}\{\ALB{L2}\}: \\
-				\textcolor{ln}{8} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
-				\textcolor{ln}{8} & \hspace{4em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}; \\
-				\textcolor{ln}{9} & \hspace{4em}\AN{0} \AL{<} \AI{to} \AL{∧} \\
-				\textcolor{ln}{10} & \hspace{4em}\AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}\AN{-1}, \AI{i}, \AI{K}, \AI{N}) \AL{∧} \\
-				\textcolor{ln}{11} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{K}, \AI{i}, \AI{K}, (\AI{to}\AN{-1}), \AI{N}, \AI{\textbackslash at}(\AI{C}[\AI{i}\AI{*}\AI{N} \AL{+} (\AI{to}\AN{-1})], \ALB{L2})) \\
-				\textcolor{ln}{12} & \hspace{4em}\AL{⟹} \AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{i}, \AI{K}, \AI{N}); \\
-				\textcolor{ln}{13} & \} \\
+				\textcolor{ln}{5} & \hspace{4em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}; \\
+				\textcolor{ln}{6} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{i}, \AI{K}, \AI{N}); \\
+				\textcolor{ln}{7} & \\
+				\textcolor{ln}{8} & \hspace{2em}\AK{case} \AI{rowresult\_step}\{\ALB{L2}\}: \\
+				\textcolor{ln}{9} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{10} & \hspace{4em}\AT{integer} \AI{i}, \AT{integer} \AI{K}, \AT{integer} \AI{N}; \\
+				\textcolor{ln}{11} & \hspace{4em}\AN{0} \AL{<} \AI{to} \AL{∧} \\
+				\textcolor{ln}{12} & \hspace{4em}\AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}\AN{-1}, \AI{i}, \AI{K}, \AI{N}) \AL{∧} \\
+				\textcolor{ln}{13} & \hspace{4em}\AI{DotProduction}(\AI{A}, \AI{B}, \AI{K}, \AI{i}, \AI{K}, (\AI{to}\AN{-1}), \AI{N}, \AI{\textbackslash at}(\AI{C}[\AI{i}\AI{*}\AI{N} \AL{+} (\AI{to}\AN{-1})], \ALB{L2})) \\
+				\textcolor{ln}{14} & \hspace{4em}\AL{⟹} \AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{i}, \AI{K}, \AI{N}); \\
+				\textcolor{ln}{15} & \} \\
 			\end{tabular}
 			\hspace{8pt}%
 			\vspace{4pt}%
 		\end{minipage}%
 	}%
 	\endgroup
-	
 \end{frame}
 
 
@@ -367,24 +368,179 @@
 				\textcolor{ln}{2} & \hspace{2em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}) \{ \\
 				\textcolor{ln}{3} & \hspace{2em}\AK{case} \AI{matrixresult\_empty}\{\ALB{L2}\}: \\
 				\textcolor{ln}{4} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
-				\textcolor{ln}{4} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}; \\
-				\textcolor{ln}{5} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{K}, \AI{N}, \AI{M}); \\
-				\textcolor{ln}{6} & \\
-				\textcolor{ln}{7} & \hspace{2em}\AK{case} \AI{matrixresult\_step}\{\ALB{L2}\}: \\
-				\textcolor{ln}{8} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
-				\textcolor{ln}{8} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}; \\
-				\textcolor{ln}{9} & \hspace{4em}\AN{0} \AL{<} \AI{to} \AL{∧} \\
-				\textcolor{ln}{10} & \hspace{4em}\AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}\AN{-1}, \AI{K}, \AI{N}, \AI{M}) \AL{∧} \\
-				\textcolor{ln}{11} & \hspace{4em}\AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{N}, \AI{to}\AN{-1}, \AI{K}, \AI{N}) \\
-				\textcolor{ln}{12} & \hspace{4em}\AL{⟹} \AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{K}, \AI{N}, \AI{M}); \\
-				\textcolor{ln}{13} & \} \\
+				\textcolor{ln}{5} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}; \\
+				\textcolor{ln}{6} & \hspace{4em}\AN{0} \AL{≥} \AI{to} \AL{⟹} \AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{K}, \AI{N}, \AI{M}); \\
+				\textcolor{ln}{7} & \\
+				\textcolor{ln}{8} & \hspace{2em}\AK{case} \AI{matrixresult\_step}\{\ALB{L2}\}: \\
+				\textcolor{ln}{9} & \hspace{4em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{float*} \AI{C}, \AT{integer} \AI{to}, \\
+				\textcolor{ln}{10} & \hspace{4em}\AT{integer} \AI{K}, \AT{integer} \AI{N}, \AT{integer} \AI{M}; \\
+				\textcolor{ln}{11} & \hspace{4em}\AN{0} \AL{<} \AI{to} \AL{∧} \\
+				\textcolor{ln}{12} & \hspace{4em}\AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}\AN{-1}, \AI{K}, \AI{N}, \AI{M}) \AL{∧} \\
+				\textcolor{ln}{13} & \hspace{4em}\AI{RowResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{N}, \AI{to}\AN{-1}, \AI{K}, \AI{N}) \\
+				\textcolor{ln}{14} & \hspace{4em}\AL{⟹} \AI{MatrixResult}\{\ALB{L2}\}(\AI{A}, \AI{B}, \AI{C}, \AI{to}, \AI{K}, \AI{N}, \AI{M}); \\
+				\textcolor{ln}{15} & \} \\
 			\end{tabular}
 			\hspace{8pt}%
 			\vspace{4pt}%
 		\end{minipage}%
 	}%
 	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Модель \_mm256: представление}
+	\small
+	Представление регистра \texttt{\_\_mm256} — это \textbf{значение} (struct из 8 float).
 	
+	\vspace{0.6em}
+	\ttfamily
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AK{typedef} \AK{struct} \{ \AT{float} \AI{e}[\AN{8}]; \} \AI{\_\_mm256}; \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Спецификация \_mm256\_setzero\_ps}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{assigns} \AI{\textbackslash nothing}; \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{ensures} \AQ{∀} \AT{integer} \AI{i}; \AN{0} \AL{≤} \AI{i} \AL{≤} \AN{7} \AL{⟹} \AI{\textbackslash result}.\AI{e}[\AI{i}] \AL{==} \AN{0.0}; \\
+				\textcolor{ln}{4} & \AC{*/} \\
+				\textcolor{ln}{5} & \AI{\_\_mm256} \AI{\_mm256\_setzero\_ps}(\AT{void}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Спецификация \_mm256\_set1\_ps}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{assigns} \AI{\textbackslash nothing}; \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{ensures} \AQ{∀} \AT{integer} \AI{i}; \AN{0} \AL{≤} \AI{i} \AL{≤} \AN{7} \AL{⟹} \AI{\textbackslash result}.\AI{e}[\AI{i}] \AL{==} \AI{v}; \\
+				\textcolor{ln}{4} & \AC{*/} \\
+				\textcolor{ln}{5} & \AI{\_\_mm256} \AI{\_mm256\_set1\_ps}(\AT{float} \AI{v}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Спецификация \_mm256\_loadu\_ps}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{requires} \AI{\textbackslash valid\_read}(\AI{a} \AL{+} (\AN{0} \AL{..} \AN{7})); \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{assigns} \AI{\textbackslash nothing}; \\
+				\textcolor{ln}{4} & \hspace{2em}\AK{ensures} \AQ{∀} \AT{integer} \AI{i}; \AN{0} \AL{≤} \AI{i} \AL{≤} \AN{7} \AL{⟹} \AI{\textbackslash result}.\AI{e}[\AI{i}] \AL{==} \AI{a}[\AI{i}]; \\
+				\textcolor{ln}{5} & \AC{*/} \\
+				\textcolor{ln}{6} & \AI{\_\_mm256} \AI{\_mm256\_loadu\_ps}(\AT{const} \AT{float*} \AI{a}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Спецификация \_mm256\_storeu\_ps}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{requires} \AI{\textbackslash valid}(\AI{mem\_addr} \AL{+} (\AN{0} \AL{..} \AN{7})); \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{assigns} \AI{mem\_addr}[\AN{0} \AL{..} \AN{7}]; \\
+				\textcolor{ln}{4} & \hspace{2em}\AK{ensures} \AQ{∀} \AT{integer} \AI{i}; \AN{0} \AL{≤} \AI{i} \AL{≤} \AN{7} \AL{⟹} \AI{mem\_addr}[\AI{i}] \AL{==} \AI{a}.\AI{e}[\AI{i}]; \\
+				\textcolor{ln}{5} & \AC{*/} \\
+				\textcolor{ln}{6} & \AK{void} \AI{\_mm256\_storeu\_ps}(\AT{float*} \AI{mem\_addr}, \AI{\_\_mm256} \AI{a}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Спецификация \_mm256\_fmadd\_ps}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{assigns} \AI{\textbackslash nothing}; \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{ensures} \AQ{∀} \AT{integer} \AI{i}; \AN{0} \AL{≤} \AI{i} \AL{<} \AN{8} \\
+				\textcolor{ln}{3} & \hspace{2em}\AL{⟹} \AI{\textbackslash result}.\AI{e}[\AI{i}] \AL{==} \AI{a}.\AI{e}[\AI{i}] \AL{*} \AI{b}.\AI{e}[\AI{i}] \AL{+} \AI{c}.\AI{e}[\AI{i}]; \\
+				\textcolor{ln}{4} & \AC{*/} \\
+				\textcolor{ln}{5} & \AI{\_\_mm256} \AI{\_mm256\_fmadd\_ps}(\AI{\_\_mm256} \AI{a}, \AI{\_\_mm256} \AI{b}, \AI{\_\_mm256} \AI{c}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
 \end{frame}
 
 
