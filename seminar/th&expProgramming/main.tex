@@ -91,7 +91,7 @@
 
 
 % ==================== ИНФОРМАЦИЯ О ДОКУМЕНТЕ ====================
-\title[Комплексный подход к дедуктивной верификации реализаций умножения матриц]{Комплексный подход к дедуктивной верификации реализаций умножения матриц}
+\title[Дедуктивная верификация реализации умножения матриц с оптимизациями]{Дедуктивная верификация реализации умножения матриц с оптимизациями в виде изменения порядка вложенности циклов и векторизации внутреннего цикла с помощью ассемблерных вставок}
 \subtitle{\scriptsize{По итогам участия в Летнем Системном Буткемпе от лаборатории YADRO, НГУ}}
 \institute{\small{Семинар теоретического и экспериментального программирования им. В.А. Непомнящего}}
 \date{\small{22 сентября 2026 г.}}
@@ -134,13 +134,6 @@
 \end{frame}
 
 
-\begin{frame}{Версия 0. Наивная реализация}
-	\begin{center}
-		\includegraphics[scale=0.6]{img/gemm_v0.png}
-	\end{center}
-\end{frame}
-
-
 \begin{frame}[fragile]{Версия 0. Наивная реализация}
 	\ttfamily\small
 	\setlength{\baselineskip}{1.1em}
@@ -167,13 +160,6 @@
 		\end{minipage}%
 	}%
 	\endgroup
-\end{frame}
-
-
-\begin{frame}{Версия 1. С переставленными внутренними циклами}
-	\begin{center}
-		\includegraphics[scale=0.5]{img/gemm_v1.png}
-	\end{center}
 \end{frame}
 
 
@@ -207,13 +193,6 @@
 		\end{minipage}%
 	}%
 	\endgroup
-\end{frame}
-
-
-\begin{frame}{Версия 2. С ассемблерными вставками}
-	\begin{center}
-		\includegraphics[scale=0.38]{img/gemm_v2.png}
-	\end{center}
 \end{frame}
 
 
@@ -268,7 +247,7 @@
 				\textcolor{ln}{2} & \hspace{2em}\AK{predicate} \AI{zeroed}(\AT{float*} \AI{a}, \AT{integer} \AI{b}, \AT{integer} \AI{e}) \AL{=} \\
 				\textcolor{ln}{3} & \hspace{4em}\AQ{∀} \AT{integer} \AI{k}; \AI{b} \AL{≤} \AI{k} \AL{<} \AI{e} \AL{⟹} \AI{a}[\AI{k}] \AL{==} \AN{0.0}; \\
 				\textcolor{ln}{4} & \\
-				\textcolor{ln}{5} & \hspace{2em} \AC{\textbackslash\textbackslash\hspace{0.5em}Остальная аксоматика на следующих слайдах} \\
+				\textcolor{ln}{5} & \hspace{2em} \AC{\textbackslash\textbackslash\hspace{0.5em}Остальная аксиоматика на следующих слайдах} \\
 				\textcolor{ln}{6} & \\
 				\textcolor{ln}{7} & \} \\
 			\end{tabular}
@@ -388,10 +367,127 @@
 \end{frame}
 
 
+\begin{frame}[fragile]{Почему такие предикаты? Инварианты внутреннего цикла}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{loop invariant} \AN{0} \AL{≤} \AI{j} \AL{≤} \AI{N}; \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{loop invariant} \AN{0} \AL{≤} \AI{k} \AL{<} \AI{K}; \\
+				\textcolor{ln}{4} & \hspace{2em}\AK{loop invariant} \AN{0} \AL{≤} \AI{i} \AL{<} \AI{M}; \\
+				\textcolor{ln}{5} & \hspace{2em}\AK{loop invariant} \AI{j} \AL{\%} \AN{16} \AL{==} \AN{0}; \\
+				\textcolor{ln}{6} & \hspace{2em}\AK{loop invariant} \AQ{∀} \AT{integer} \AI{q}; \AN{0} \AL{≤} \AI{q} \AL{<} \AI{j} \\
+				\textcolor{ln}{7} & \hspace{4em}\AL{⟹} \AI{DotProduction}(\AI{A}, \AI{B}, \AI{k}\AN{+1}, \AI{i}, \AI{K}, \AI{q}, \AI{N}, \AI{c}[\AI{q}]); \\
+				\textcolor{ln}{8} & \hspace{2em}\AK{loop invariant} \AQ{∀} \AT{integer} \AI{q}; \AI{j} \AL{≤} \AI{q} \AL{<} \AI{N} \\
+				\textcolor{ln}{9} & \hspace{4em}\AL{⟹} \AI{DotProduction}(\AI{A}, \AI{B}, \AI{k}, \AI{i}, \AI{K}, \AI{q}, \AI{N}, \AI{c}[\AI{q}]); \\
+				\textcolor{ln}{10} & \\
+				\textcolor{ln}{11} & \hspace{2em}\AK{loop assigns} \AI{C}[\AI{i}\AI{*}\AI{N} \AL{..} \AI{i}\AI{*}\AI{N} \AL{+} \AI{N} \AN{-1}], \AI{j}; \\
+				\textcolor{ln}{12} & \hspace{2em}\AK{loop variant} \AI{N}\AN{-}\AI{j}; \\
+				\textcolor{ln}{13} & \AC{*/} \\
+				\textcolor{ln}{14} & \AK{for} (\AT{int} \AI{j} \AL{=} \AN{0}; \AI{j} \AL{<} \AI{N}; \AI{j} \AL{+=} \AN{16}) \{ \AC{...} \} \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Почему такие предикаты? Следующий по вложенности цикл}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{loop invariant} \AN{0} \AL{≤} \AI{k} \AL{≤} \AI{K}; \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{loop invariant} \AN{0} \AL{≤} \AI{i} \AL{<} \AI{M}; \\
+				\textcolor{ln}{4} & \hspace{2em}\AK{loop invariant} \AQ{∀} \AT{integer} \AI{l}; \AN{0} \AL{≤} \AI{l} \AL{<} \AI{N} \\
+				\textcolor{ln}{5} & \hspace{4em}\AL{⟹} \AI{DotProduction}(\AI{A}, \AI{B}, \AI{k}, \AI{i}, \AI{K}, \AI{l}, \AI{N}, \AI{c}[\AI{l}]); \\
+				\textcolor{ln}{6} & \\
+				\textcolor{ln}{7} & \hspace{2em}\AK{loop assigns} \AI{k}, \AI{C}[\AI{i}\AI{*}\AI{N} \AL{..} \AI{i}\AI{*}\AI{N} \AL{+} \AI{N} \AN{-1}]; \\
+				\textcolor{ln}{8} & \hspace{2em}\AK{loop variant} \AI{K}\AN{-}\AI{k}; \\
+				\textcolor{ln}{9} & \AC{*/} \\
+				\textcolor{ln}{10} & \AK{for} (\AT{int} \AI{k} \AL{=} \AN{0}; \AI{k} \AL{<} \AI{K}; \AL{++}\AI{k}) \{ \AC{...} \} \\
+				\textcolor{ln}{11} & \\
+				\textcolor{ln}{12} & \AC{/*@} \AK{assert} \AI{row\_done}: \AI{RowResult}\{\ALB{Here}\}(\AI{A}, \AI{B}, \AI{C}, \AI{N}, \AI{i}, \AI{K}, \AI{N}); \AC{*/} \\
+				\textcolor{ln}{13} & \AC{/*@} \AK{assert} \AI{mat\_step}: \AI{MatrixResult}\{\ALB{Here}\}(\AI{A}, \AI{B}, \AI{C}, \AI{i}\AN{+1}, \AI{K}, \AI{N}, \AI{M}); \AC{*/} \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
+\begin{frame}[fragile]{Почему такие предикаты? Аннотация функции gemm\_v2}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AC{/*@} \\
+				\textcolor{ln}{2} & \hspace{2em}\AK{requires} \AI{\textbackslash valid\_read}(\AI{A} \AL{+} (\AN{0} \AL{..} \AI{M}\AI{*}\AI{K}\AN{-1})); \\
+				\textcolor{ln}{3} & \hspace{2em}\AK{requires} \AI{\textbackslash valid\_read}(\AI{B} \AL{+} (\AN{0} \AL{..} \AI{K}\AI{*}\AI{N}\AN{-1})); \\
+				\textcolor{ln}{4} & \hspace{2em}\AK{requires} \AI{\textbackslash valid}(\AI{C} \AL{+} (\AN{0} \AL{..} \AI{M}\AI{*}\AI{N}\AN{-1})); \\
+				\textcolor{ln}{5} & \hspace{2em}\AK{requires} \AI{\textbackslash separated}(\AI{A} \AL{+} (\AN{0} \AL{..} \AI{M}\AI{*}\AI{K}\AN{-1}), \AI{C} \AL{+} (\AN{0} \AL{..} \AI{M}\AI{*}\AI{N}\AN{-1})); \\
+				\textcolor{ln}{6} & \hspace{2em}\AK{requires} \AI{\textbackslash separated}(\AI{B} \AL{+} (\AN{0} \AL{..} \AI{K}\AI{*}\AI{N}\AN{-1}), \AI{C} \AL{+} (\AN{0} \AL{..} \AI{M}\AI{*}\AI{N}\AN{-1})); \\
+				\textcolor{ln}{7} & \hspace{2em}\AK{requires} \AI{M} \AL{>} \AN{0} \AL{∧} \AI{N} \AL{>} \AN{0} \AL{∧} \AI{K} \AL{>} \AN{0}; \\
+				\textcolor{ln}{8} & \hspace{2em}\AK{requires} \AI{N} \AL{\%} \AN{16} \AL{==} \AN{0}; \\
+				\textcolor{ln}{9} & \hspace{2em}\AK{ensures} \AI{MatrixResult}\{\ALB{Post}\}(\AI{A}, \AI{B}, \AI{C}, \AI{M}, \AI{K}, \AI{N}, \AI{M}); \\
+				\textcolor{ln}{10} & \AC{*/} \\
+				\textcolor{ln}{11} & \AK{void} \AI{gemm\_v2}(\AT{int} \AI{M}, \AT{int} \AI{N}, \AT{int} \AI{K}, \AT{const} \AT{float*} \AI{A}, \AT{const} \AT{float*} \AI{B}, \AT{float*} \AI{C}) \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
 \begin{frame}[fragile]{Модель \_mm256: представление}
 	\small
-	Представление регистра \texttt{\_\_mm256} — это \textbf{значение} (struct из 8 float).
+	Как аннотировать спецификацию такой функции?
+	\vspace{2em}
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AI{\_\_mm256} \AI{\_mm256\_setzero\_ps}(\AT{void}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
 	
+	Представление регистра \texttt{\_\_mm256} — это \textbf{значение} (struct из 8 float).
 	\vspace{0.6em}
 	\ttfamily
 	\begingroup
@@ -605,17 +701,34 @@
 \end{frame}
 
 
-\begin{frame}{Определены спецификации операций, входящих в ассемблерные вставки}
-    \begin{center}
-        \includegraphics[scale=0.4]{img/typedef.png}
-    \end{center}
-\end{frame}
-
-
-\begin{frame}{Расширена формальная теория предметной области на функции и предикаты из этих спецификаций}
-    \begin{center}
-        \includegraphics[scale=0.4]{img/dp_frame.png}
-    \end{center}
+\begin{frame}[fragile]{Расширена формальная теория предметной области на функции и предикаты из этих спецификаций}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.15em}
+	\setlength{\parindent}{0pt}
+	
+	\begingroup
+	\setlength{\fboxsep}{0pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\linewidth}
+			\vspace{6pt}%
+			\hspace{8pt}%
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \AK{lemma} \AI{div8}: \\
+				\textcolor{ln}{2} & \hspace{2em}\AQ{∀} \AT{integer} \AI{m}; \AI{m} \AL{\%} \AN{16} \AL{==} \AN{0} \AL{⟹} \AI{m} \AL{\%} \AN{8} \AL{==} \AN{0}; \\
+				\textcolor{ln}{3} & \\
+				\textcolor{ln}{4} & \AK{lemma} \AI{dp\_frame}\{\ALB{L1},\ALB{L2}\}: \\
+				\textcolor{ln}{5} & \hspace{2em}\AQ{∀} \AT{float*} \AI{A}, \AT{float*} \AI{B}, \AT{integer} \AI{to}, \AI{i}, \AI{K}, \AI{j}, \AI{N}, \AT{real} \AI{res}; \\
+				\textcolor{ln}{6} & \hspace{2em}(\AQ{∀} \AT{integer} \AI{idx}; \AN{0} \AL{≤} \AI{idx} \AL{<} \AI{K}\AI{*}(\AI{i}\AN{+1}) \AL{⟹} \AI{\textbackslash at}(\AI{A}[\AI{idx}],\ALB{L1}) \AL{==} \AI{\textbackslash at}(\AI{A}[\AI{idx}],\ALB{L2})) \AL{∧} \\
+				\textcolor{ln}{7} & \hspace{2em}(\AQ{∀} \AT{integer} \AI{idx}; \AN{0} \AL{≤} \AI{idx} \AL{<} \AI{N}\AI{*}\AI{K} \AL{⟹} \AI{\textbackslash at}(\AI{B}[\AI{idx}],\ALB{L1}) \AL{==} \AI{\textbackslash at}(\AI{B}[\AI{idx}],\ALB{L2})) \AL{∧} \\
+				\textcolor{ln}{8} & \hspace{2em}\AN{0} \AL{≤} \AI{i} \AL{∧} \AN{0} \AL{≤} \AI{j} \AL{<} \AI{N} \AL{∧} \AI{to} \AL{≤} \AI{K} \AL{⟹} \\
+				\textcolor{ln}{9} & \hspace{2em}\AI{\textbackslash at}(\AI{DotProduction}(\AI{A},\AI{B},\AI{to},\AI{i},\AI{K},\AI{j},\AI{N},\AI{res}),\ALB{L1}) \\
+				\textcolor{ln}{10} & \hspace{2em}\AL{⟹} \AI{\textbackslash at}(\AI{DotProduction}(\AI{A},\AI{B},\AI{to},\AI{i},\AI{K},\AI{j},\AI{N},\AI{res}),\ALB{L2}); \\
+			\end{tabular}
+			\hspace{8pt}%
+			\vspace{4pt}%
+		\end{minipage}%
+	}%
+	\endgroup
 \end{frame}
 
 
