@@ -40,6 +40,18 @@
 	\vskip0pt%
 }
 
+% ==================== РУКОПИСНЫЙ КОД ====================
+% Цвета
+\definecolor{kw}{RGB}{128,0,128}     % ключевые слова — фиолетовый
+\definecolor{tp}{RGB}{0,0,255}       % типы — синий
+\definecolor{nm}{RGB}{255,140,0}     % числа — оранжевый
+\definecolor{vr}{RGB}{70,90,120}     % переменные — серо-синий
+\definecolor{ln}{RGB}{150,150,150}   % номера строк — серый
+
+\newcommand{\K}[1]{\textcolor{kw}{#1}}   % keyword
+\newcommand{\T}[1]{\textcolor{tp}{#1}}   % type
+\newcommand{\N}[1]{\textcolor{nm}{#1}}   % number
+\newcommand{\V}[1]{\textcolor{vr}{#1}}   % variable
 
 
 % ==================== ИНФОРМАЦИЯ О ДОКУМЕНТЕ ====================
@@ -93,6 +105,37 @@
 \end{frame}
 
 
+\begin{frame}[fragile]{Версия 0. Наивная реализация}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.1em}
+	\setlength{\parindent}{0pt}
+	
+	\definecolor{codebg}{RGB}{245,245,245} % светло-серый фон
+	
+	\begingroup
+	\setlength{\fboxsep}{7pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \K{void} \V{gemm\_v0}(\T{int} \V{M}, \T{int} \V{N}, \T{int} \V{K}, \T{const} \T{float*} \V{A}, \T{const} \T{float*} \V{B}, \T{float*} \V{C}) \\
+				\textcolor{ln}{2} & \{ \\
+				\textcolor{ln}{3} & \hspace{2em}\K{for} (\T{int} \V{i} = \N{0}; \V{i} < \V{M}; ++\V{i}) \\
+				\textcolor{ln}{4} & \hspace{2em}\{ \\
+				\textcolor{ln}{5} & \hspace{4em}\K{for} (\T{int} \V{j} = \N{0}; \V{j} < \V{N}; ++\V{j}) \\
+				\textcolor{ln}{6} & \hspace{4em}\{ \\
+				\textcolor{ln}{7} & \hspace{6em}\V{C}[\V{i}*\V{N} + \V{j}] = \N{0}; \\
+				\textcolor{ln}{8} & \hspace{6em}\K{for} (\T{int} \V{k} = \N{0}; \V{k} < \V{K}; ++\V{k}) \\
+				\textcolor{ln}{9} & \hspace{8em}\V{C}[\V{i}*\V{N} + \V{j}] += \V{A}[\V{i}*\V{K} + \V{k}] * \V{B}[\V{k}*\V{N} + \V{j}]; \\
+				\textcolor{ln}{10} & \hspace{4em}\} \\
+				\textcolor{ln}{11} & \hspace{2em}\} \\
+				\textcolor{ln}{12} & \}
+			\end{tabular}
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
 \begin{frame}{Версия 1. С переставленными внутренними циклами}
 	\begin{center}
 		\includegraphics[scale=0.5]{img/gemm_v1.png}
@@ -100,10 +143,82 @@
 \end{frame}
 
 
+\begin{frame}[fragile]{Версия 1. С переставленными внутренними циклами}
+	\ttfamily\small
+	\setlength{\baselineskip}{1.1em}
+	\setlength{\parindent}{0pt}
+	
+	\definecolor{codebg}{RGB}{245,245,245}
+	
+	\begingroup
+	\setlength{\fboxsep}{7pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \K{void} \V{gemm\_v1}(\T{int} \V{M}, \T{int} \V{N}, \T{int} \V{K}, \T{const} \T{float*} \V{A}, \T{const} \T{float*} \V{B}, \T{float*} \V{C}) \\
+				\textcolor{ln}{2} & \{ \\
+				\textcolor{ln}{3} & \hspace{2em}\K{for} (\T{int} \V{i} = \N{0}; \V{i} < \V{M}; ++\V{i}) \\
+				\textcolor{ln}{4} & \hspace{2em}\{ \\
+				\textcolor{ln}{5} & \hspace{4em}\T{float*} \V{c} = \V{C} + \V{i} * \V{N}; \\
+				\textcolor{ln}{6} & \hspace{4em}\K{for} (\T{int} \V{j} = \N{0}; \V{j} < \V{N}; ++\V{j}) \\
+				\textcolor{ln}{7} & \hspace{6em}\V{c}[\V{j}] = \N{0}; \\
+				\textcolor{ln}{8} & \hspace{4em}\K{for} (\T{int} \V{k} = \N{0}; \V{k} < \V{K}; ++\V{k}) \\
+				\textcolor{ln}{9} & \hspace{4em}\{ \\
+				\textcolor{ln}{10} & \hspace{6em}\T{const} \T{float*} \V{b} = \V{B} + \V{k} * \V{N}; \\
+				\textcolor{ln}{11} & \hspace{6em}\T{float} \V{a} = \V{A}[\V{i}*\V{K} + \V{k}]; \\
+				\textcolor{ln}{12} & \hspace{6em}\K{for} (\T{int} \V{j} = \N{0}; \V{j} < \V{N}; ++\V{j}) \\
+				\textcolor{ln}{13} & \hspace{8em}\V{c}[\V{j}] += \V{a} * \V{b}[\V{j}]; \\
+				\textcolor{ln}{14} & \hspace{4em}\} \\
+				\textcolor{ln}{15} & \hspace{2em}\} \\
+				\textcolor{ln}{16} & \} \\
+			\end{tabular}
+		\end{minipage}%
+	}%
+	\endgroup
+\end{frame}
+
+
 \begin{frame}{Версия 2. С ассемблерными вставками}
 	\begin{center}
 		\includegraphics[scale=0.38]{img/gemm_v2.png}
 	\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]{Версия 2. С ассемблерными вставками}
+	\ttfamily\footnotesize
+	\setlength{\baselineskip}{1.1em}
+	\setlength{\parindent}{0pt}
+	
+	\definecolor{codebg}{RGB}{245,245,245}
+	
+	\begingroup
+	\setlength{\fboxsep}{7pt}%
+	\colorbox{codebg}{%
+		\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}
+			\begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+				\textcolor{ln}{1} & \K{void} \V{gemm\_v2}(\T{int} \V{M}, \T{int} \V{N}, \T{int} \V{K}, \T{const} \T{float*} \V{A}, \T{const} \T{float*} \V{B}, \T{float*} \V{C}) \\
+				\textcolor{ln}{2} & \{ \\
+				\textcolor{ln}{3} & \hspace{1.5em}\K{for} (\T{int} \V{i} = \N{0}; \V{i} < \V{M}; ++\V{i}) \\
+				\textcolor{ln}{4} & \hspace{1.5em}\{ \\
+				\textcolor{ln}{5} & \hspace{3em}\T{float*} \V{c} = \V{C} + \V{i} * \V{N}; \\
+				\textcolor{ln}{6} & \hspace{3em}\K{for} (\T{int} \V{j} = \N{0}; \V{j} < \V{N}; \V{j} += \N{8}) \\
+				\textcolor{ln}{7} & \hspace{4.5em}\V{\_mm256\_storeu\_ps}(\V{c} + \V{j} + \N{0}, \V{\_mm256\_setzero\_ps}()); \\
+				\textcolor{ln}{8} & \hspace{3em}\K{for} (\T{int} \V{k} = \N{0}; \V{k} < \V{K}; ++\V{k}) \\
+				\textcolor{ln}{9} & \hspace{3em}\{ \\
+				\textcolor{ln}{10} & \hspace{4.5em}\T{const} \T{float*} \V{b} = \V{B} + \V{k} * \V{N}; \\
+				\textcolor{ln}{11} & \hspace{4.5em}\V{\_\_m256} \V{a} = \V{\_mm256\_set1\_ps}(\V{A}[\V{i}*\V{K} + \V{k}]); \\
+				\textcolor{ln}{12} & \hspace{4.5em}\K{for} (\T{int} \V{j} = \N{0}; \V{j} < \V{N}; \V{j} += \N{16}) \\
+				\textcolor{ln}{13} & \hspace{4.5em}\{ \\
+				\textcolor{ln}{14} & \hspace{6em}\V{\_mm256\_storeu\_ps}(\V{c} + \V{j} + \N{0}, \V{\_mm256\_fmadd\_ps}(\V{a}, \\
+				\textcolor{ln}{15} & \hspace{7.5em}\V{\_mm256\_loadu\_ps}(\V{b} + \V{j} + \N{0}), \V{\_mm256\_loadu\_ps}(\V{c} + \V{j} + \N{0}))); \\
+				\textcolor{ln}{16} & \hspace{6em}\V{\_mm256\_storeu\_ps}(\V{c} + \V{j} + \N{8}, \V{\_mm256\_fmadd\_ps}(\V{a}, \\
+				\textcolor{ln}{17} & \hspace{7.5em}\V{\_mm256\_loadu\_ps}(\V{b} + \V{j} + \N{8}), \V{\_mm256\_loadu\_ps}(\V{c} + \V{j} + \N{8}))); \\
+				\textcolor{ln}{18} & \}\}\}\} \\
+			\end{tabular}
+		\end{minipage}%
+	}%
+	\endgroup
 \end{frame}
 
 
